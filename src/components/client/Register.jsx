@@ -62,8 +62,7 @@ class Register extends React.Component {
 
       axios.post(CONSTANTS.API_BASE_URL + "/auth/register", {...this.state.regForm})
       .then((response) => {
-          alert("Good");
-        window.location = "/email-verification/check/" + this.state.regForm.fullName;
+        window.location = "/email-verification/check/" + this.state.regForm.email;
 
       }).catch((error) => {
         try{

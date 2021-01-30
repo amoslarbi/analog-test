@@ -19,9 +19,12 @@ class Register extends React.Component {
       errorMessage: '',
       isVerifying: false,
       verificationSuccess: false,
+      resendCodeSuccess: false,
+      userDetails: [],
       fullName: '',
       regForm: {
-        // fullName: '',
+        fullName: '',
+        email: '',
         code: '',
       },
       regFormErrors: {
@@ -48,12 +51,30 @@ class Register extends React.Component {
 
     const { match: { params } } = this.props;
     
-    if(params.fullName){
+    if(params.email){
     this.setState({
         ...this.state,
-        fullName: params.fullName,
+        email: params.email,
         isLoading: false
     })
+
+    axios.post(CONSTANTS.API_BASE_URL + "/auth/get-user-details", {email: params.email})
+    .then((response) => {
+      this.setState({
+          isLoading: false,
+      });
+      let data = response.data.data;
+      this.setState({
+        userDetails: data,
+    });
+
+    }).catch((error) => {
+        this.setState({
+            isLoading: false,
+        });
+        alert("Request Failed");
+    });
+
     }
 
   }
@@ -68,7 +89,6 @@ class Register extends React.Component {
 
       axios.post(CONSTANTS.API_BASE_URL + "/auth/verify-token", {...this.state.regForm})
       .then((response) => {
-        // window.location = "/email-verification/check/" + this.state.regForm.email;
         this.setState({
             verificationSuccess: true,
             isVerifying: false,
@@ -103,6 +123,49 @@ class Register extends React.Component {
 
   }
 
+  resendVerificationCode = e => {
+
+    this.setState({
+        isVerifying: true,
+        errorMessage: '',
+    });
+
+    axios.post(CONSTANTS.API_BASE_URL + "/auth/resend-code", {email: this.state.userDetails[1], fullName: this.state.userDetails[0]})
+    .then((response) => {
+      this.setState({
+          resendCodeSuccess: true,
+          isVerifying: false,
+      });
+
+    }).catch((error) => {
+      try{
+        let errorResponse = error.response.data;
+        let regFormErrors = this.state.regFormErrors;
+
+        if(errorResponse.hasOwnProperty("errors")){
+          if(errorResponse.errors.hasOwnProperty("code")){
+            regFormErrors.code = errorResponse.errors.code;
+          }
+        }
+
+        let errorMessage = 'Error: Could not connect to server';
+        if(errorResponse.hasOwnProperty("message")){
+          errorMessage = errorResponse.message;
+        }
+
+        this.setState({
+          ...this.state,
+          isVerifying: false,
+          errorMessage: errorMessage,
+          regFormErrors: regFormErrors
+        });
+      }catch(e){
+        window.location = "/server-offline";
+      }
+    });
+
+}
+
   render(){
 
     return (
@@ -132,10 +195,20 @@ class Register extends React.Component {
                   <div class="nk-block nk-block-middle nk-auth-body">
                       <div class="nk-block-head">
                           <div class="nk-block-head-content">
-                              <h5 class="nk-block-title">Hello {this.state.fullName} we have sent you a verification email Please enter your 5 digit code here </h5>
+                              <h5 class="nk-block-title">Hello {this.state.userDetails[0]} we have sent you a verification email Please enter your 5 digit code here </h5>
                               {/* <p>The Movie List</p> */}
                           </div>
                       </div>
+
+                      {
+                        this.state.resendCodeSuccess &&
+                        <div class="example-alert nk-block-head">
+                          <div class="alert alert-success alert-icon">
+                            <em class="icon ni ni-check"></em> 
+                            <strong>A new activation code has been sent to your Email</strong>
+                          </div>
+                        </div>
+                      }
 
                       {
                         this.state.verificationSuccess &&
@@ -182,7 +255,7 @@ class Register extends React.Component {
                           </div>
 
                       </form>
-                      <div class="form-note-s2 pt-4"> Didn't get an Email? <a href="/login" class="link-success">Re-send Verification</a></div>
+                      <div class="form-note-s2 pt-4"> Didn't get an Email? <span style={{cursor: "pointer"}} onClick={()=>{this.resendVerificationCode()}} class="link-success">Re-send Verification</span></div>
                   </div>
                   <div class="nk-block nk-auth-footer" style={{paddingTop: "0px"}}>
                       <div>
