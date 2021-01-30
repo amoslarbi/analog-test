@@ -40,27 +40,6 @@ class Register extends React.Component {
     });
     }, 1500);
 
-    axios.get('https://ipapi.co/json/').then((response) => {
-        let data = response.data;
-        var oldData = this.state.regForm;
-        oldData.country = data.country_name;
-        this.setState({
-          regForm: oldData,
-        });
-    }).catch((error) => {
-        console.log(error);
-    });
-
-  }
-
-  registrationFormCountry(event, name) {
-    // let value = event.target.value;
-    // console.log("updating for name = " + name + " and val = " + value);
-    var oldData = this.state.regForm;
-    oldData[name] = event;
-    this.setState({
-      regForm: oldData,
-    });
   }
 
   registrationForm(event, name) {
@@ -74,6 +53,7 @@ class Register extends React.Component {
   }
 
   submitRegistrationForm = e => {
+
       this.setState({
           isRegistering: true,
           errorMessage: '',
@@ -82,7 +62,8 @@ class Register extends React.Component {
 
       axios.post(CONSTANTS.API_BASE_URL + "/auth/register", {...this.state.regForm})
       .then((response) => {
-        window.location = "/email-verification/check/" + this.state.regForm.email;
+          alert("Good");
+        window.location = "/email-verification/check/" + this.state.regForm.fullName;
 
       }).catch((error) => {
         try{
@@ -92,10 +73,6 @@ class Register extends React.Component {
           if(errorResponse.hasOwnProperty("errors")){
             if(errorResponse.errors.hasOwnProperty("fullName")){
               regFormErrors.fullName = errorResponse.errors.fullName;
-            }
-
-            if(errorResponse.errors.hasOwnProperty("country")){
-              regFormErrors.country = errorResponse.errors.country;
             }
 
             if(errorResponse.errors.hasOwnProperty("email")){
