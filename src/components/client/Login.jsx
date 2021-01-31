@@ -5,10 +5,9 @@ import AuthService from '../../misc/AuthService';
 import CONSTANTS from '../../misc/Constants';
 import { Select, Checkbox, Input } from 'antd';
 import 'antd/dist/antd.css';
-import PasswordStrengthBar from 'react-password-strength-bar';
 const { Option } = Select;
 
-class Register extends React.Component {
+class Login extends React.Component {
 
   constructor(props){
     AuthService.checkGreeter();
@@ -19,12 +18,10 @@ class Register extends React.Component {
       errorMessage: '',
       isRegistering: false,
       regForm: {
-        fullName: '',
         email: '',
         password: ''
       },
       regFormErrors: {
-        fullName: '',
         email: '',
         password: ''
       }
@@ -44,7 +41,6 @@ class Register extends React.Component {
 
   registrationForm(event, name) {
     let value = event.target.value;
-    // console.log("updating for name = " + name + " and val = " + value);
     var oldData = this.state.regForm;
     oldData[name] = value;
     this.setState({
@@ -60,9 +56,9 @@ class Register extends React.Component {
         });
       e.preventDefault();
 
-      axios.post(CONSTANTS.API_BASE_URL + "/auth/register", {...this.state.regForm})
+      axios.post(CONSTANTS.API_BASE_URL + "/auth/login", {...this.state.regForm})
       .then((response) => {
-        window.location = "/email-verification/check/" + this.state.regForm.email;
+        // window.location = "/email-verification/check/" + this.state.regForm.email;
 
       }).catch((error) => {
         try{
@@ -70,9 +66,6 @@ class Register extends React.Component {
           let regFormErrors = this.state.regFormErrors;
 
           if(errorResponse.hasOwnProperty("errors")){
-            if(errorResponse.errors.hasOwnProperty("fullName")){
-              regFormErrors.fullName = errorResponse.errors.fullName;
-            }
 
             if(errorResponse.errors.hasOwnProperty("email")){
               regFormErrors.email = errorResponse.errors.email;
@@ -152,18 +145,7 @@ class Register extends React.Component {
                         </div>
                       }
 
-                      <form onSubmit={this.submitRegistrationForm} method="POST">
-
-                          <div class="form-group">
-                              <div class="form-label-group">
-                                <label class="form-label">Full name<span style={{color: "red"}}> *</span></label>
-                              </div>
-                              <Input size="large" required value={this.state.regForm.fullName} onChange={(e) => {this.registrationForm(e,"fullName");}} type="text" class="form-control form-control-lg"  placeholder="Enter your full name" />
-                              {
-                                this.state.regFormErrors.fullName.length > 0 && 
-                                <p class="text-danger fs-12px">{this.state.regFormErrors.fullName}</p>
-                              }
-                          </div>
+                      <form onSubmit={this.submitLoginForm} method="POST">
 
                           <div class="form-group">
                               <div class="form-label-group">
@@ -177,17 +159,10 @@ class Register extends React.Component {
                           </div>
                           <div class="form-group">
                               <div class="form-label-group">
-                                  <label class="form-label">Password (min six characters)<span style={{color: "red"}}> *</span></label>
+                                  <label class="form-label">Password</label>
                               </div>
                               <div class="form-control-wrap">
                                   <Input.Password size="large" minLength="6" required value={this.state.regForm.password} onChange={(e) => {this.registrationForm(e,"password");}} type="password" class="form-control form-control-lg" id="password" placeholder="Enter your password" />
-                                  { this.state.regForm.password.length > 0 ? <PasswordStrengthBar onChangeScore={(score) => {
-                                    this.setState({
-                                      ...this.state,
-                                      passwordStrength: score
-                                    });
-                                  }} className="eg-bar" shortScoreWord="Too short" scoreWords={this.scoreWords} barColors={this.colors} password={this.state.regForm.password} /> : <span></span> }
-                                  
                                   {
                                     this.state.regFormErrors.password.length > 0 && 
                                     <p class="text-danger fs-12px">{this.state.regFormErrors.password}</p>
@@ -196,12 +171,11 @@ class Register extends React.Component {
                           </div>
                           
                           <div class="form-group">
-                              <p>By subscribing you agree to the analogteams <a href="#" class="link-success">Terms & Condition</a> & <a href="#" class="link-success">Privacy Policy</a></p>
-                              <button disabled={this.state.isRegistering} class="btn btn-lg btn-success btn-block">{ !this.state.isRegistering ? <span>Send Me Movies</span> : <div class="spinner-border" role="status" style={{margin: "-6px"}}> </div> }</button>
+                              <button disabled={this.state.isRegistering} class="btn btn-lg btn-success btn-block">{ !this.state.isRegistering ? <span>Login</span> : <div class="spinner-border" role="status" style={{margin: "-6px"}}> </div> }</button>
                           </div>
 
                       </form>
-                      <div class="form-note-s2 pt-4"> Already have an account ? <a href="/login" class="link-success">Login instead</a></div>
+                      <div class="form-note-s2 pt-4"> New on Movie List? <a href="/login" class="link-success">Register instead</a></div>
                   </div>
                   <div class="nk-block nk-auth-footer" style={{paddingTop: "0px"}}>
                       <div>
@@ -217,4 +191,4 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+export default Login;
