@@ -181,7 +181,7 @@ class Login extends React.Component {
                           </div>
 
                       </form>
-                      <div class="form-note-s2 pt-4"> New on Movie List? <a href="/login" class="link-success">Register instead</a></div>
+                      <div class="form-note-s2 pt-4"> New on Movie List? <a href="/register" class="link-success">Register instead</a></div>
                   </div>
                   <div class="nk-block nk-auth-footer" style={{paddingTop: "0px"}}>
                       <div>

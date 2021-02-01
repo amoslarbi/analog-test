@@ -96,7 +96,7 @@ class Register extends React.Component {
         });
 
         setTimeout(() => {
-            window.location = "/unsubscribe";
+            window.location = "/unsubscribe/" + this.state.regForm.email;
           }, 2000);
 
       }).catch((error) => {
