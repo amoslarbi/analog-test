@@ -1,7 +1,7 @@
 const Production = {
     Constants: {
-        "ANALOG_URL": "",
-        "API_BASE_URL": "",
+      "OBALLOT_URL": "https://analog.oballot.com",
+      "API_BASE_URL": "https://analogapi.oballot.com",
     }
   }
   
