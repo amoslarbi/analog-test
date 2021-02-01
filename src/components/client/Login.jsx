@@ -17,6 +17,7 @@ class Login extends React.Component {
       passwordStrength: 0,
       errorMessage: '',
       isRegistering: false,
+      userDetails: [],
       regForm: {
         email: '',
         password: ''
@@ -48,7 +49,7 @@ class Login extends React.Component {
     });
   }
 
-  submitRegistrationForm = e => {
+  submitLoginForm = e => {
 
       this.setState({
           isRegistering: true,
@@ -58,7 +59,12 @@ class Login extends React.Component {
 
       axios.post(CONSTANTS.API_BASE_URL + "/auth/login", {...this.state.regForm})
       .then((response) => {
-        // window.location = "/email-verification/check/" + this.state.regForm.email;
+
+        let data = response.data.data;
+        this.setState({
+          userDetails: data,
+        });
+        window.location = "/unsubscribe/" + this.state.userDetails[1];
 
       }).catch((error) => {
         try{
@@ -159,7 +165,7 @@ class Login extends React.Component {
                           </div>
                           <div class="form-group">
                               <div class="form-label-group">
-                                  <label class="form-label">Password</label>
+                                  <label class="form-label">Password<span style={{color: "red"}}> *</span></label>
                               </div>
                               <div class="form-control-wrap">
                                   <Input.Password size="large" minLength="6" required value={this.state.regForm.password} onChange={(e) => {this.registrationForm(e,"password");}} type="password" class="form-control form-control-lg" id="password" placeholder="Enter your password" />

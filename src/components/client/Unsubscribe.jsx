@@ -74,6 +74,11 @@ class unsubscribe extends React.Component {
             isVerifying: false,
         });
 
+        setTimeout(() => {
+          window.location = "/register";
+        }, 2000);
+        
+
       }).catch((error) => {
         try{
           let errorResponse = error.response.data;
@@ -142,7 +147,7 @@ class unsubscribe extends React.Component {
                         <div class="example-alert nk-block-head">
                           <div class="alert alert-success alert-icon">
                             <em class="icon ni ni-check"></em> 
-                            <strong>You have successfully Unsubscribed.</strong>
+                            <strong>You have successfully Unsubscribed. Redirecting...</strong>
                           </div>
                         </div>
                       }

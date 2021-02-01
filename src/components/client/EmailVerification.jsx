@@ -88,12 +88,16 @@ class Register extends React.Component {
         });
       e.preventDefault();
 
-      axios.post(CONSTANTS.API_BASE_URL + "/auth/verify-token", {...this.state.regForm})
+      axios.post(CONSTANTS.API_BASE_URL + "/auth/confirmEmail", {...this.state.regForm})
       .then((response) => {
         this.setState({
             verificationSuccess: true,
             isVerifying: false,
         });
+
+        setTimeout(() => {
+            window.location = "/unsubscribe";
+          }, 2000);
 
       }).catch((error) => {
         try{
@@ -216,7 +220,7 @@ class Register extends React.Component {
                         <div class="example-alert nk-block-head">
                           <div class="alert alert-success alert-icon">
                             <em class="icon ni ni-check"></em> 
-                            <strong>Email Verified. You will receive newsletters from us at a 9AM (GMT) daily.</strong>
+                            <strong>Email Verified. You will receive newsletters from us at 9AM (GMT) daily. Redirecting...</strong>
                           </div>
                         </div>
                       }
