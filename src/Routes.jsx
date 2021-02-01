@@ -16,7 +16,7 @@ class Routes extends React.Component {
           {/* <Route exact path={`${process.env.PUBLIC_URL + "/login"}`} component={Login} /> */}
           <Route exact path={`${process.env.PUBLIC_URL + "/register"}`} component={Register} />
           <Route exact path={`${process.env.PUBLIC_URL + "/unsubscribe/:email"}`} component={Unsubscribe} />
-          <Route exact path={`${process.env.PUBLIC_URL + "/login"}`} component={Login} />
+          <Route exact path={`${process.env.PUBLIC_URL + "/"}`} component={Login} />
           <Route exact path={`${process.env.PUBLIC_URL + "/email-verification/check/:email"}`} component={EmailVerification} />
 
         </Switch>
